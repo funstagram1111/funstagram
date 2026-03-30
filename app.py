@@ -31,4 +31,9 @@ def get_secret():
     client = SecretClient(vault_url=kv_url, credential=credential)
     
     secret = client.get_secret("db-password")
-    return f"Secret value: {secret.value}"
+#simulate usage (not exposing)
+
+    if secret.value == "supersecret123":
+	return "Secret accessed securely"
+    else:
+	return "Something went wrong"
