@@ -1,9 +1,8 @@
 from flask import Flask
 import requests
-from azure.identity import DefaultAzureCredential
-from azure.keyvault.secrets import SecretClient
+import os
 
-app = Flask(__name__)
+app = Flask(_name_)
 
 @app.route("/")
 def home():
@@ -16,7 +15,7 @@ def about():
 @app.route("/internal")
 def internal():
     try:
-        response = requests.get("http://10.0.2.4")  # 🔁 replace with your VM private IP
+        response = requests.get("http://10.1.x.x", timeout=2)
         return response.text
     except Exception as e:
         return f"Internal call failed: {str(e)}"
@@ -24,22 +23,13 @@ def internal():
 @app.route("/secret")
 def get_secret():
     try:
-        kv_url =  "https://kv-funstagram-01.vault.azure.net/" # 🔁 replace
-
-        credential = DefaultAzureCredential()
-        client = SecretClient(vault_url=kv_url, credential=credential)
-
-        secret = client.get_secret("db-password")
-
-        # Secure usage (not exposing value)
-        if secret.value:
-            return "Secret accessed securely ✅"
+        secret = os.environ.get("DB_PASSWORD")
+        if secret:
+            return "Secret accessed via env ✅"
         else:
             return "Secret not found"
-
     except Exception as e:
-        return f"Error fetching secret: {str(e)}"
+        return f"Error: {str(e)}"
 
-# IMPORTANT for Azure
-if __name__ == "__main__":
+if _name_ == "_main_":
     app.run(host="0.0.0.0", port=8000)
