@@ -27,7 +27,7 @@ def get_secret():
             return "Secret accessed via env ✅"
         else:
             return "Secret not found"
-    except Exception:
+    except Exception as e:
         tc.track_exception()
         tc.flush()
         return "Error occurred"
