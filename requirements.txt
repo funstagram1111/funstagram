@@ -1,6 +1,3 @@
 flask
 requests
-azure-identity
-azure-keyvault-secrets
 gunicorn
-applicationinsights
