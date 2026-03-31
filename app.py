@@ -6,6 +6,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def home():
+return 1/0
     return "Welcome to Funstagram 🚀"
 
 @app.route("/about")
