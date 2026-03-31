@@ -1,39 +1,35 @@
 from flask import Flask
 import requests
 import os
+from applicationinsights import TelemetryClient
 
 app = Flask(__name__)
 
+instrumentation_key = os.environ.get("APPINSIGHTS_INSTRUMENTATIONKEY")
+tc = TelemetryClient(instrumentation_key)
+
 @app.route("/")
 def home():
-return 1/0
+    tc.track_event("HomePageVisited")
+    tc.flush()
     return "Welcome to Funstagram 🚀"
 
-@app.route("/about")
-def about():
-    return "Built by DevOps Engineer"
-
-# Optional (only works if VM exists)
-@app.route("/internal")
-def internal():
-    try:
-        response = requests.get("http://10.1.x.x", timeout=2)  # replace if needed
-        return response.text
-    except Exception as e:
-        return f"Internal call failed: {str(e)}"
-
-# Key Vault via environment variable
 @app.route("/secret")
 def get_secret():
     try:
         secret = os.environ.get("DB_PASSWORD")
 
+        tc.track_event("SecretAccessed")
+        tc.flush()
+
         if secret:
             return "Secret accessed via env ✅"
         else:
             return "Secret not found"
-    except Exception as e:
-        return f"Error: {str(e)}"
+    except Exception:
+        tc.track_exception()
+        tc.flush()
+        return "Error occurred"
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8000)
