@@ -10,12 +10,6 @@ instrumentation_key = os.environ.get("APPINSIGHTS_INSTRUMENTATIONKEY")
 tc = TelemetryClient(instrumentation_key)
 
 
-@app.route("/")
-def home():
-     tc.tract_event("HomePageVisited")
-     tc.flush()
-     return "Welcome to Funstagram"
-
 @app.route("/about")
 def about():
     return "Built by DevOps Engineer"
