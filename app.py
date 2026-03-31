@@ -12,6 +12,7 @@ tc = TelemetryClient(instrumentation_key)
 def home():
     tc.track_event("HomePageVisited")
     tc.flush()
+retrun 1/0
     return "Welcome to Funstagram 🚀"
 
 @app.route("/secret")
