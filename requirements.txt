@@ -1,4 +1,4 @@
 flask
 requests
-gunicorn
+gunicorn app:app
 applicationinsights
