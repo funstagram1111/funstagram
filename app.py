@@ -4,7 +4,7 @@ from azure.storage.blob import BlobServiceClient
 @app.route("/upload")
 def upload():
     try:
-        account_url = "https:stfunstagram01.blob.core.windows.net"
+        account_url = "https://stfunstagram01.blob.core.windows.net"
         container_name = "images"
 
         credential = DefaultAzureCredential()
