@@ -1,28 +1,22 @@
-from flask import Flask
-import os
-from applicationinsights import TelemetryClient
+from azure.identity import DefaultAzureCredential
+from azure.storage.blob import BlobServiceClient
 
-app = Flask(__name__)
-
-instrumentation_key = os.environ.get("APPINSIGHTS_INSTRUMENTATIONKEY")
-
-tc = None
-if instrumentation_key:
-    tc = TelemetryClient(instrumentation_key)
-
-@app.route("/")
-def home():
-    return "Welcome to Funstagram 🚀"
-
-@app.route("/break")
-def break_app():
+@app.route("/upload")
+def upload():
     try:
-        return 1/0
-    except Exception:
-        if tc:
-            tc.track_exception()
-            tc.flush()
-        return "Error triggered"
+        account_url = "https:stfunstagram01.blob.core.windows.net"
+        container_name = "images"
 
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8000)
+        credential = DefaultAzureCredential()
+        blob_service_client = BlobServiceClient(account_url=account_url, credential=credential)
+
+        blob_client = blob_service_client.get_blob_client(container=container_name, blob="test.txt")
+
+        data = "Hello from Funstagram 🚀"
+
+        blob_client.upload_blob(data, overwrite=True)
+
+        return "File uploaded successfully ✅"
+
+    except Exception as e:
+        return f"Upload failed: {str(e)}"
