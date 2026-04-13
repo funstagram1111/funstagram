@@ -2,3 +2,5 @@ flask
 requests
 gunicorn
 applicationinsights
+azure-identity
+azure-storage-blob
